@@ -181,6 +181,40 @@ const GRADE_CORE_UNITS={
     {game_id:'g1_chinese_basic',subject:'chinese',subject_label:'國語',unit_label:'字詞與句子'},
     {game_id:'g1_english_basic',subject:'english',subject_label:'英文',unit_label:'字母與基礎單字'},
     {game_id:'g1_life_basic',subject:'life',subject_label:'生活',unit_label:'生活常識與安全'}
+  ],
+  2:[
+    {game_id:'g2_math_basic',subject:'math',subject_label:'數學',unit_label:'100以內加減與乘法初步'},
+    {game_id:'g2_chinese_basic',subject:'chinese',subject_label:'國語',unit_label:'詞語、句子與閱讀'},
+    {game_id:'g2_english_basic',subject:'english',subject_label:'英文',unit_label:'生活單字與基礎句型'},
+    {game_id:'g2_life_basic',subject:'life',subject_label:'生活',unit_label:'安全、健康與生活觀察'}
+  ],
+  3:[
+    {game_id:'g3_math_basic',subject:'math',subject_label:'數學',unit_label:'三位數加減、乘除與應用'},
+    {game_id:'g3_chinese_basic',subject:'chinese',subject_label:'國語',unit_label:'詞語、成語、句型與閱讀'},
+    {game_id:'g3_english_basic',subject:'english',subject_label:'英文',unit_label:'生活單字、句型與閱讀'},
+    {game_id:'g3_science_basic',subject:'science',subject_label:'自然',unit_label:'植物、水、空氣、光與聲音'},
+    {game_id:'g3_social_basic',subject:'social',subject_label:'社會',unit_label:'社區、地圖與公共生活'}
+  ],
+  4:[
+    {game_id:'g4_math_basic',subject:'math',subject_label:'數學',unit_label:'大數運算、乘除、周長與應用'},
+    {game_id:'g4_chinese_basic',subject:'chinese',subject_label:'國語',unit_label:'詞語、成語、句型與閱讀理解'},
+    {game_id:'g4_english_basic',subject:'english',subject_label:'英文',unit_label:'生活單字、句型與簡易閱讀'},
+    {game_id:'g4_science_basic',subject:'science',subject_label:'自然',unit_label:'水循環、磁力、聲音與生物'},
+    {game_id:'g4_social_basic',subject:'social',subject_label:'社會',unit_label:'家鄉、地圖、產業與公共生活'}
+  ],
+  5:[
+    {game_id:'g5_math_basic',subject:'math',subject_label:'數學',unit_label:'因倍數、分數小數、面積體積與應用'},
+    {game_id:'g5_chinese_basic',subject:'chinese',subject_label:'國語',unit_label:'詞語、成語、句型與閱讀理解'},
+    {game_id:'g5_english_basic',subject:'english',subject_label:'英文',unit_label:'生活單字、句型與簡易閱讀'},
+    {game_id:'g5_science_basic',subject:'science',subject_label:'自然',unit_label:'力、熱、植物繁殖、天文與生態'},
+    {game_id:'g5_social_basic',subject:'social',subject_label:'社會',unit_label:'人口、產業、公共事務與文化'}
+  ],
+  6:[
+    {game_id:'g6_math_basic',subject:'math',subject_label:'數學',unit_label:'比率、百分率、分數小數、速率與體積'},
+    {game_id:'g6_chinese_basic',subject:'chinese',subject_label:'國語',unit_label:'詞語、成語、句型與閱讀理解'},
+    {game_id:'g6_english_basic',subject:'english',subject_label:'英文',unit_label:'生活單字、句型、時態與簡易閱讀'},
+    {game_id:'g6_science_basic',subject:'science',subject_label:'自然',unit_label:'電路、機械、天文、生態與水循環'},
+    {game_id:'g6_social_basic',subject:'social',subject_label:'社會',unit_label:'民主、人權、全球化與永續發展'}
   ]
 };
 
@@ -208,9 +242,9 @@ async function getGradeProgress(grade=1){
 
   const percent=Math.round(units.reduce((s,u)=>s+u.completion,0)/units.length);
 
-  const subjectOrder=[
-    ['math','數學'],['chinese','國語'],['english','英文'],['life','生活']
-  ];
+  const subjectOrder = Number(grade)<=2
+    ? [['math','數學'],['chinese','國語'],['english','英文'],['life','生活']]
+    : [['math','數學'],['chinese','國語'],['english','英文'],['science','自然'],['social','社會']];
   const subjects=subjectOrder.map(([subject,label])=>{
     const list=units.filter(u=>u.subject===subject);
     if(!list.length) return null;
@@ -231,7 +265,7 @@ async function getGradeProgress(grade=1){
     const u=weakUnits[0];
     suggestion=`🎯 建議先加強：${u.subject_label}｜${u.unit_label} ${u.mastery}分。`;
   }else if(percent>=100){
-    suggestion='🏆 一年級核心學習進度已達 100%。';
+    suggestion=`🏆 ${Number(grade)}年級核心學習進度已達 100%。`;
   }
 
   return {grade:Number(grade),percent,subjects,units,suggestion};
