@@ -114,7 +114,7 @@
   {
     "grade": 4,
     "title": "4年級數學",
-    "desc": "300題｜大數運算、乘除、周長與應用題",
+    "desc": "預留入口｜可直接替換此科目資料夾",
     "icon": "📐",
     "path": "content/g4/math/basic/",
     "subject": "math"
@@ -122,7 +122,7 @@
   {
     "grade": 4,
     "title": "4年級國語",
-    "desc": "300題｜詞語、成語、句型與閱讀理解",
+    "desc": "預留入口｜可直接替換此科目資料夾",
     "icon": "📖",
     "path": "content/g4/chinese/basic/",
     "subject": "chinese"
@@ -130,7 +130,7 @@
   {
     "grade": 4,
     "title": "4年級英文",
-    "desc": "300題｜生活單字、句型與簡易閱讀",
+    "desc": "預留入口｜可直接替換此科目資料夾",
     "icon": "🔤",
     "path": "content/g4/english/basic/",
     "subject": "english"
@@ -138,7 +138,7 @@
   {
     "grade": 4,
     "title": "4年級自然",
-    "desc": "300題｜水循環、磁力、聲音與生物",
+    "desc": "預留入口｜可直接替換此科目資料夾",
     "icon": "🔬",
     "path": "content/g4/science/basic/",
     "subject": "science"
@@ -146,7 +146,7 @@
   {
     "grade": 4,
     "title": "4年級社會",
-    "desc": "300題｜家鄉、地圖、產業與公共生活",
+    "desc": "預留入口｜可直接替換此科目資料夾",
     "icon": "🌏",
     "path": "content/g4/social/basic/",
     "subject": "social"
@@ -154,7 +154,7 @@
   {
     "grade": 5,
     "title": "5年級數學",
-    "desc": "預留入口｜可直接替換此科目資料夾",
+    "desc": "300題｜因倍數、分數小數、面積體積與應用",
     "icon": "📐",
     "path": "content/g5/math/basic/",
     "subject": "math"
@@ -162,7 +162,7 @@
   {
     "grade": 5,
     "title": "5年級國語",
-    "desc": "預留入口｜可直接替換此科目資料夾",
+    "desc": "300題｜詞語、成語、句型與閱讀理解",
     "icon": "📖",
     "path": "content/g5/chinese/basic/",
     "subject": "chinese"
@@ -170,7 +170,7 @@
   {
     "grade": 5,
     "title": "5年級英文",
-    "desc": "預留入口｜可直接替換此科目資料夾",
+    "desc": "300題｜生活單字、句型與簡易閱讀",
     "icon": "🔤",
     "path": "content/g5/english/basic/",
     "subject": "english"
@@ -178,7 +178,7 @@
   {
     "grade": 5,
     "title": "5年級自然",
-    "desc": "預留入口｜可直接替換此科目資料夾",
+    "desc": "300題｜力、熱、植物繁殖、天文與生態",
     "icon": "🔬",
     "path": "content/g5/science/basic/",
     "subject": "science"
@@ -186,7 +186,7 @@
   {
     "grade": 5,
     "title": "5年級社會",
-    "desc": "預留入口｜可直接替換此科目資料夾",
+    "desc": "300題｜人口、產業、公共事務與文化",
     "icon": "🌏",
     "path": "content/g5/social/basic/",
     "subject": "social"
