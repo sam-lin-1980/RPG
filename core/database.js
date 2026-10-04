@@ -162,6 +162,7 @@ async function saveUnitProgress(gameId,grade,subject,unitId,mastery){
   const row={user_id:user.id,game_id:gameId,grade,subject,unit_id:unitId,mastery:Math.max(0,Math.min(100,Math.round(mastery))),updated_at:new Date().toISOString()};
   const {data,error}=await db.from('unit_progress').upsert(row,{onConflict:'user_id,game_id'}).select().single();
   if(error) throw error;
+  try{ await recalculateGradeProgress(grade); }catch(e){ console.warn('grade progress recalc:',e); }
   return data;
 }
 async function saveGameResult(r){
@@ -172,6 +173,79 @@ async function saveGameResult(r){
   if(error) throw error;
   return data;
 }
+
+const GRADE_CORE_UNITS={
+  1:[
+    {game_id:'g1_math_addition10',subject:'math',subject_label:'數學',unit_label:'10以內加法'},
+    {game_id:'g1_math_subtraction10',subject:'math',subject_label:'數學',unit_label:'10以內減法'},
+    {game_id:'g1_chinese_basic',subject:'chinese',subject_label:'國語',unit_label:'字詞與句子'},
+    {game_id:'g1_english_basic',subject:'english',subject_label:'英文',unit_label:'字母與基礎單字'},
+    {game_id:'g1_life_basic',subject:'life',subject_label:'生活',unit_label:'生活常識與安全'}
+  ]
+};
+
+async function getGradeProgress(grade=1){
+  const db=requireClient(), user=await getCurrentUser();
+  if(!user) throw new Error('尚未登入。');
+
+  const goals=GRADE_CORE_UNITS[Number(grade)]||[];
+  if(!goals.length){
+    return {grade:Number(grade),percent:0,subjects:[],units:[],suggestion:'此年級的進度規則尚未設定。'};
+  }
+
+  const {data,error}=await db.from('unit_progress').select('game_id,subject,unit_id,mastery')
+    .eq('user_id',user.id).eq('grade',Number(grade));
+  if(error) throw error;
+
+  const byId=new Map((data||[]).map(r=>[r.game_id,r]));
+  const units=goals.map(g=>{
+    const r=byId.get(g.game_id);
+    const mastery=Math.max(0,Math.min(100,Number(r?.mastery||0)));
+    // 熟練度 80 分即視為此核心單元完成 100%；未達 80 依比例累積。
+    const completion=Math.min(100,Math.round(mastery/80*100));
+    return {...g,mastery,completion,passed:mastery>=80};
+  });
+
+  const percent=Math.round(units.reduce((s,u)=>s+u.completion,0)/units.length);
+
+  const subjectOrder=[
+    ['math','數學'],['chinese','國語'],['english','英文'],['life','生活']
+  ];
+  const subjects=subjectOrder.map(([subject,label])=>{
+    const list=units.filter(u=>u.subject===subject);
+    if(!list.length) return null;
+    const mastery=Math.round(list.reduce((s,u)=>s+u.mastery,0)/list.length);
+    return {subject,label,mastery,status:mastery<70?'red':mastery<80?'yellow':'green'};
+  }).filter(Boolean);
+
+  const weakSubjects=subjects.filter(s=>s.mastery<80).sort((a,b)=>a.mastery-b.mastery);
+  const weakUnits=units.filter(u=>u.mastery<70).sort((a,b)=>a.mastery-b.mastery);
+
+  let suggestion='✅ 各科目前都已達 80 分，可繼續完成剩餘核心單元。';
+  if(weakSubjects.length){
+    const a=weakSubjects[0], b=weakSubjects[1];
+    suggestion=`🎯 目前最需要加強：${a.label} ${a.mastery}分`;
+    if(b) suggestion+=`、${b.label} ${b.mastery}分`;
+    suggestion+='。先把較弱科目提升到 80 分。';
+  }else if(weakUnits.length){
+    const u=weakUnits[0];
+    suggestion=`🎯 建議先加強：${u.subject_label}｜${u.unit_label} ${u.mastery}分。`;
+  }else if(percent>=100){
+    suggestion='🏆 一年級核心學習進度已達 100%。';
+  }
+
+  return {grade:Number(grade),percent,subjects,units,suggestion};
+}
+
+async function recalculateGradeProgress(grade=1){
+  const detail=await getGradeProgress(grade);
+  const profile=await getMyProfile();
+  if(profile && Number(profile.grade_level)===Number(grade) && Number(profile.grade_percent)!==detail.percent){
+    await updateMyProfile({grade_percent:detail.percent});
+  }
+  return detail;
+}
+
 async function getLeaderboard(limit=20){
   const db=requireClient();
   const {data,error}=await db.from('player_profiles')
@@ -198,6 +272,7 @@ window.KA_DB={
   configured:!!client,urlOk,keyOk,sdkOk,client,
   signUp,signIn,signOut,getSession,getCurrentUser,getMyProfile,updateMyProfile,addRewards,
   getTicket,setTicket,addTicket,getUnitProgress,saveUnitProgress,saveGameResult,
+  getGradeProgress,recalculateGradeProgress,
   getLeaderboard,getAchievementLeaderboard
 };
 })();

@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>知識學院 RPG</title>
+<title>知識學院 RPG V10</title>
 <link rel="stylesheet" href="core/styles.css">
 <style>
 .auth-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.auth-box{padding:18px}
@@ -15,12 +15,17 @@
 .grade{margin-top:22px}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
 .game{padding:16px}.icon{font-size:42px}.game a{display:inline-block;margin-top:10px;text-decoration:none}
 .avatar-mini{font-size:26px}
+.version-badge{display:inline-block;margin-left:8px;padding:4px 9px;border-radius:999px;background:#312e81;color:#c7d2fe;font-size:13px;font-weight:900;vertical-align:middle}
+.progress-list{display:grid;gap:8px;margin-top:10px}
+.progress-row{display:flex;justify-content:space-between;gap:12px;padding:8px 10px;border-radius:10px;background:#111827}
+.progress-red{color:#fda4af}.progress-yellow{color:#fde68a}.progress-green{color:#86efac}
+.guide-box{margin-top:10px;padding:10px;border-radius:10px;background:#172554;color:#dbeafe}
 @media(max-width:760px){.auth-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="brand">🏫 知識學院 RPG</div>
+  <div class="brand">🏫 知識學院 RPG <span class="version-badge">V10</span></div>
   <p class="muted">登入後開始累積角色 EXP、Boss 入場券與排行榜資料。</p>
 
   <div class="card pad" id="dbCard"><b>🗄️ Supabase</b><div id="dbStatus" class="muted" style="margin-top:6px">檢查中…</div></div>
@@ -40,7 +45,7 @@
       <input id="regPw" type="password" placeholder="密碼（至少6字）">
       <input id="regPw2" type="password" placeholder="再次輸入密碼">
       <button class="btn magic" id="regBtn" style="margin-top:10px">建立角色</button>
-      <div class="status muted" id="regMsg">帳號建立後從一年級 0% 開始。</div>
+      <div class="status muted" id="regMsg">帳號建立後從一年級 0% 開始；完成各科學習後會自動增加進度。</div>
     </div>
   </section>
 
@@ -53,6 +58,12 @@
         </div>
         <button class="btn secondary" id="logoutBtn">登出</button>
       </div>
+    </div>
+
+    <div class="card pad" style="margin-top:14px" id="learningProgressCard">
+      <div style="font-size:20px;font-weight:900">📈 一年級學習進度：<span id="learningPercent">0%</span></div>
+      <div class="progress-list" id="subjectProgress"></div>
+      <div class="guide-box" id="learningSuggestion">讀取學習建議中…</div>
     </div>
 
     <div class="card pad" style="margin-top:14px">
@@ -68,8 +79,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js?v=3"></script>
-<script src="core/database.js?v=3"></script>
+<script src="config.js?v=10"></script>
+<script src="core/database.js?v=10"></script>
 <script>
 const $=id=>document.getElementById(id);
 const gradeName=n=> n>=7?'國中生':`${n}年級`;
@@ -86,9 +97,26 @@ async function boot(){
 function showAuth(){$('authArea').classList.remove('hidden');$('gameArea').classList.add('hidden')}
 async function enterGame(){
   $('authArea').classList.add('hidden');$('gameArea').classList.remove('hidden');
-  const p=await KA_DB.getMyProfile();
+  let p=await KA_DB.getMyProfile();
   $('nickname').textContent=p.nickname;
-  $('gradeText').textContent=`${gradeName(p.grade_level)} ${p.grade_percent}%`;
+
+  try{
+    const gp=await KA_DB.recalculateGradeProgress(p.grade_level);
+    p=await KA_DB.getMyProfile();
+    $('gradeText').textContent=`${gradeName(p.grade_level)} ${gp.percent}%`;
+    $('learningPercent').textContent=`${gp.percent}%`;
+    $('subjectProgress').innerHTML=gp.subjects.map(s=>{
+      const cls=s.status==='red'?'progress-red':s.status==='yellow'?'progress-yellow':'progress-green';
+      const icon=s.status==='red'?'🔴':s.status==='yellow'?'🟡':'🟢';
+      const text=s.status==='red'?'需要優先加強':s.status==='yellow'?'再加強即可達標':'已達標';
+      return `<div class="progress-row"><span>${icon} ${s.label}</span><span class="${cls}"><b>${s.mastery}分</b>｜${text}</span></div>`;
+    }).join('');
+    $('learningSuggestion').textContent=gp.suggestion;
+  }catch(e){
+    $('gradeText').textContent=`${gradeName(p.grade_level)} ${p.grade_percent}%`;
+    $('learningSuggestion').textContent='學習進度讀取失敗：'+e.message;
+  }
+
   $('exp').textContent=p.exp;$('coins').textContent=p.coins;
   await loadCatalog();await loadRank('level');
 }
