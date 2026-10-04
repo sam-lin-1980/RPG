@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>知識學院 RPG V10.2</title>
+<title>知識學院 RPG V10.3</title>
 <link rel="stylesheet" href="core/styles.css">
 <style>
 .auth-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.auth-box{padding:18px}
@@ -20,12 +20,14 @@
 .progress-row{display:flex;justify-content:space-between;gap:12px;padding:8px 10px;border-radius:10px;background:#111827}
 .progress-red{color:#fda4af}.progress-yellow{color:#fde68a}.progress-green{color:#86efac}
 .guide-box{margin-top:10px;padding:10px;border-radius:10px;background:#172554;color:#dbeafe}
+.final-challenge-btn{display:none;margin-top:12px;padding:14px 18px;border:0;border-radius:12px;background:#f59e0b;color:#111827;font-weight:900;font-size:18px;cursor:pointer}
+.final-challenge-btn.show{display:inline-block}
 @media(max-width:760px){.auth-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="brand">🏫 知識學院 RPG <span class="version-badge">V10.2</span></div>
+  <div class="brand">🏫 知識學院 RPG <span class="version-badge">V10.3</span></div>
   <p class="muted">登入後開始累積角色 EXP、Boss 入場券與排行榜資料。</p>
 
   <div class="card pad" id="dbCard"><b>🗄️ Supabase</b><div id="dbStatus" class="muted" style="margin-top:6px">檢查中…</div></div>
@@ -64,6 +66,7 @@
       <div style="font-size:20px;font-weight:900">📈 一年級學習進度：<span id="learningPercent">0%</span></div>
       <div class="progress-list" id="subjectProgress"></div>
       <div class="guide-box" id="learningSuggestion">讀取學習建議中…</div>
+      <button id="finalChallengeBtn" class="final-challenge-btn" onclick="location.href='content/g1/final/'">🏆 挑戰一年級最終試煉</button>
     </div>
 
     <div class="card pad" style="margin-top:14px">
@@ -79,8 +82,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js?v=10.2"></script>
-<script src="core/database.js?v=10.2"></script>
+<script src="config.js?v=10.3"></script>
+<script src="core/database.js?v=10.3"></script>
 <script>
 const $=id=>document.getElementById(id);
 const gradeName=n=> n>=7?'國中生':`${n}年級`;
@@ -112,6 +115,10 @@ async function enterGame(){
       return `<div class="progress-row"><span>${icon} ${s.label}</span><span class="${cls}"><b>${s.mastery}分</b>｜${text}</span></div>`;
     }).join('');
     $('learningSuggestion').textContent=gp.suggestion;
+    const finalBtn=$('finalChallengeBtn');
+    if(finalBtn){
+      finalBtn.classList.toggle('show', Number(p.grade_level)===1 && gp.percent>=100);
+    }
   }catch(e){
     $('gradeText').textContent=`${gradeName(p.grade_level)} ${p.grade_percent}%`;
     $('learningSuggestion').textContent='學習進度讀取失敗：'+e.message;

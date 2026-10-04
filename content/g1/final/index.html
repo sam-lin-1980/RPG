@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>一年級最終試煉｜V10.3</title>
+<link rel="stylesheet" href="../../../core/styles.css?v=10.3">
+<style>
+body{background:#0f172a;color:#fff}
+.wrap{max-width:980px;margin:0 auto;padding:24px}
+.card{background:#172033;border:1px solid #334155;border-radius:18px;padding:22px;margin-bottom:16px}
+h1{margin-top:0}.q{font-size:30px;font-weight:900;margin:22px 0}
+.options{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.options button{padding:16px;border-radius:12px;border:2px solid #475569;background:#fff;color:#111827;font-size:20px;font-weight:800;cursor:pointer}
+.options button.selected{outline:4px solid #38bdf8}
+.meta{display:flex;gap:14px;flex-wrap:wrap;color:#cbd5e1}
+.bar{height:18px;background:#0f172a;border-radius:999px;overflow:hidden;margin:10px 0}.fill{height:100%;background:#38bdf8;width:0}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+.btn{padding:13px 18px;border:0;border-radius:12px;font-weight:900;font-size:17px;cursor:pointer}
+.primary{background:#38bdf8;color:#082f49}.secondary{background:#475569;color:white}
+.hidden{display:none}
+.good{color:#86efac}.bad{color:#fda4af}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>🏆 一年級最終試煉 <small>V10.3</small></h1>
+    <p>共 20 題：數學、國語、英文、生活各 5 題。總分 80 分以上即可升上二年級。</p>
+    <div class="meta">
+      <span id="who">讀取玩家中…</span>
+      <span id="progress">題目 0/20</span>
+      <span id="score">目前 0 分</span>
+    </div>
+    <div class="bar"><div class="fill" id="fill"></div></div>
+  </div>
+
+  <div class="card" id="quizCard">
+    <div id="subject">準備中</div>
+    <div class="q" id="question">正在載入題目…</div>
+    <div class="options" id="options"></div>
+    <div class="actions">
+      <button class="btn primary" id="submitBtn" onclick="submitAnswer()">確認答案</button>
+      <button class="btn secondary" onclick="location.href='../../../'">離開試煉</button>
+    </div>
+    <div id="msg" style="margin-top:16px;font-weight:800"></div>
+  </div>
+
+  <div class="card hidden" id="resultCard">
+    <h2 id="resultTitle"></h2>
+    <p id="resultText"></p>
+    <div class="actions">
+      <button class="btn primary" onclick="location.href='../../../'">回首頁</button>
+      <button class="btn secondary" id="retryBtn" onclick="location.reload()">重新挑戰</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../../config.js?v=10.3"></script>
+<script src="../../../core/database.js?v=10.3"></script>
+<script>
+const QUESTIONS = [
+  // 數學 5
+  {s:'數學',q:'7 + 3 = ?',a:'10',o:['8','9','10']},
+  {s:'數學',q:'9 - 4 = ?',a:'5',o:['4','5','6']},
+  {s:'數學',q:'6 + 2 = ?',a:'8',o:['7','8','9']},
+  {s:'數學',q:'10 - 7 = ?',a:'3',o:['2','3','4']},
+  {s:'數學',q:'5 + 4 = ?',a:'9',o:['8','9','10']},
+
+  // 國語 5
+  {s:'國語',q:'「大」的相反詞是哪一個？',a:'小',o:['小','多','高']},
+  {s:'國語',q:'哪一個是文具？',a:'鉛筆',o:['鉛筆','香蕉','雨鞋']},
+  {s:'國語',q:'「小鳥在天空＿＿。」哪個詞最適合？',a:'飛',o:['飛','喝','睡']},
+  {s:'國語',q:'「上」的相反詞是哪一個？',a:'下',o:['下','前','左']},
+  {s:'國語',q:'哪一個句子最合理？',a:'我去學校上課',o:['我去學校上課','魚在天空游泳','雨傘拿來吃飯']},
+
+  // 英文 5
+  {s:'英文',q:'cat 是什麼意思？',a:'貓',o:['貓','狗','鳥']},
+  {s:'英文',q:'red 是哪一種顏色？',a:'紅色',o:['紅色','藍色','綠色']},
+  {s:'英文',q:'one 是多少？',a:'1',o:['1','2','3']},
+  {s:'英文',q:'dog 是什麼意思？',a:'狗',o:['魚','狗','貓']},
+  {s:'英文',q:'A 的小寫是哪一個？',a:'a',o:['a','b','d']},
+
+  // 生活 5
+  {s:'生活',q:'吃東西前應該做什麼？',a:'洗手',o:['洗手','跑步','睡覺']},
+  {s:'生活',q:'過馬路時應該先做什麼？',a:'看號誌與來車',o:['直接跑','看號誌與來車','閉上眼睛']},
+  {s:'生活',q:'垃圾應該丟到哪裡？',a:'垃圾桶',o:['垃圾桶','地上','桌上']},
+  {s:'生活',q:'在走廊上最安全的方式是？',a:'慢慢走',o:['快跑','慢慢走','推同學']},
+  {s:'生活',q:'搭車時應該怎麼做？',a:'坐好並繫安全帶',o:['坐好並繫安全帶','站在椅子上','把手伸出窗外']}
+];
+
+let idx=0, correct=0, selected='';
+
+function shuffle(a){return a.slice().sort(()=>Math.random()-.5)}
+const order=shuffle(QUESTIONS);
+
+async function boot(){
+  const session=await KA_DB.getSession();
+  if(!session){ alert('請先登入。'); location.href='../../../'; return; }
+  const p=await KA_DB.getMyProfile();
+  $('who').textContent='玩家：'+p.nickname;
+  if(Number(p.grade_level)!==1){ alert('目前不是一年級，無法進行此試煉。'); location.href='../../../'; return; }
+  const gp=await KA_DB.recalculateGradeProgress(1);
+  if(gp.percent<100){ alert('一年級進度尚未達 100%。'); location.href='../../../'; return; }
+  showQ();
+}
+
+function $(id){return document.getElementById(id)}
+
+function showQ(){
+  const q=order[idx];
+  selected='';
+  $('subject').textContent='📘 '+q.s;
+  $('question').textContent=q.q;
+  $('options').innerHTML='';
+  shuffle(q.o).forEach(x=>{
+    const b=document.createElement('button');
+    b.textContent=x;
+    b.onclick=()=>{
+      selected=x;
+      [...$('options').children].forEach(c=>c.classList.remove('selected'));
+      b.classList.add('selected');
+    };
+    $('options').appendChild(b);
+  });
+  $('progress').textContent=`題目 ${idx+1}/20`;
+  $('score').textContent=`目前 ${correct*5} 分`;
+  $('fill').style.width=((idx/20)*100)+'%';
+  $('msg').textContent='';
+  $('submitBtn').disabled=false;
+}
+
+async function submitAnswer(){
+  if(!selected){ $('msg').textContent='請先選一個答案。'; return; }
+  const q=order[idx];
+  if(selected===q.a){
+    correct++;
+    $('msg').className='good';
+    $('msg').textContent='✅ 正確';
+  }else{
+    $('msg').className='bad';
+    $('msg').textContent='❌ 錯誤，正確答案：'+q.a;
+  }
+  $('submitBtn').disabled=true;
+  idx++;
+  $('score').textContent=`目前 ${correct*5} 分`;
+  $('fill').style.width=((idx/20)*100)+'%';
+
+  if(idx>=20){
+    setTimeout(finish,650);
+  }else{
+    setTimeout(showQ,650);
+  }
+}
+
+async function finish(){
+  $('quizCard').classList.add('hidden');
+  $('resultCard').classList.remove('hidden');
+
+  const score=correct*5;
+  const passed=score>=80;
+
+  try{
+    await KA_DB.saveGameResult({
+      game_id:'g1_final_exam',
+      grade:1,
+      subject:'all',
+      unit_id:'final_exam',
+      score,
+      first_correct_rate:score,
+      final_correct_rate:score,
+      exp_earned:0,
+      coins_earned:0,
+      boss:true,
+      completed:passed
+    });
+  }catch(e){ console.warn(e); }
+
+  if(passed){
+    await KA_DB.updateMyProfile({grade_level:2,grade_percent:0});
+    $('resultTitle').textContent='🎉 通過！正式升上二年級';
+    $('resultText').innerHTML=`最終成績：<b>${score} 分</b><br>已將等級更新為「二年級 0%」。EXP、金幣與其他資料都會保留。`;
+    $('retryBtn').classList.add('hidden');
+  }else{
+    $('resultTitle').textContent='📚 還差一點';
+    $('resultText').innerHTML=`最終成績：<b>${score} 分</b><br>需要 80 分以上才能升二年級。可以回去加強較弱科目後再挑戰。`;
+  }
+}
+
+boot();
+</script>
+</body>
+</html>
