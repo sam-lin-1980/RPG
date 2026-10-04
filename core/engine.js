@@ -361,7 +361,7 @@ function submit(){
   setTimeout(()=>bossDefense(),600);
 }
 
-function finishMob(){
+async function finishMob(){
   const sc=Math.round(state.finalCorrect/state.attempted*100),fc=Math.round(state.firstCorrect/state.attempted*100),pass=sc>=80;
   const eg=pass?Math.round(60+sc*.4):20,cg=pass?20+Math.floor(sc/10):8;progress.exp+=eg;progress.coins+=cg;progress.battles++;if(pass)progress.tickets++;
   progress.mastery=Math.max(progress.mastery,Math.min(100,Math.round(sc*.6+fc*.4)));
