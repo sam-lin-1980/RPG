@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>知識學院 RPG V10.9</title>
+<title>知識學院 RPG V11.0</title>
 <link rel="stylesheet" href="core/styles.css">
 <style>
 .auth-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.auth-box{padding:18px}
@@ -27,7 +27,7 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="brand">🏫 知識學院 RPG <span class="version-badge">V10.9</span></div>
+  <div class="brand">🏫 知識學院 RPG <span class="version-badge">V11.0</span></div>
   <p class="muted">登入後開始累積角色 EXP、Boss 入場券與排行榜資料。</p>
 
   <div class="card pad" id="dbCard"><b>🗄️ Supabase</b><div id="dbStatus" class="muted" style="margin-top:6px">檢查中…</div></div>
@@ -66,7 +66,7 @@
       <div style="font-size:20px;font-weight:900">📈 <span id="learningGradeLabel">學習</span>進度：<span id="learningPercent">0%</span></div>
       <div class="progress-list" id="subjectProgress"></div>
       <div class="guide-box" id="learningSuggestion">讀取學習建議中…</div>
-      <button id="finalChallengeBtn" class="final-challenge-btn" onclick="location.href='content/g1/final/'">🏆 挑戰一年級最終試煉</button>
+      <button id="finalChallengeBtn" class="final-challenge-btn">🏆 挑戰年級最終試煉</button>
     </div>
 
     <div class="card pad" style="margin-top:14px">
@@ -82,8 +82,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js?v=10.9"></script>
-<script src="core/database.js?v=10.9"></script>
+<script src="config.js?v=11.0"></script>
+<script src="core/database.js?v=11.0"></script>
 <script>
 const $=id=>document.getElementById(id);
 const gradeName=n=> n>=7?'國中生':`${n}年級`;
@@ -118,7 +118,15 @@ async function enterGame(){
     $('learningSuggestion').textContent=gp.suggestion;
     const finalBtn=$('finalChallengeBtn');
     if(finalBtn){
-      finalBtn.classList.toggle('show', Number(p.grade_level)===1 && gp.percent>=100);
+      const g=Number(p.grade_level);
+      const canFinal=g>=1 && g<=6 && gp.percent>=100;
+      finalBtn.classList.toggle('show',canFinal);
+      if(canFinal){
+        finalBtn.textContent=`🏆 挑戰${gradeName(g)}最終試煉`;
+        finalBtn.onclick=()=>{ location.href=`content/g${g}/final/`; };
+      }else{
+        finalBtn.onclick=null;
+      }
     }
   }catch(e){
     $('gradeText').textContent=`${gradeName(p.grade_level)} ${p.grade_percent}%`;

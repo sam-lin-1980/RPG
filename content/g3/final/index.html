@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>3年級最終試煉｜V11.0</title>
+<link rel="stylesheet" href="../../../core/styles.css?v=11.0">
+<style>
+body{background:#0f172a;color:#fff}
+.wrap{max-width:980px;margin:0 auto;padding:24px}
+.card{background:#172033;border:1px solid #334155;border-radius:18px;padding:22px;margin-bottom:16px}
+h1{margin-top:0}.q{font-size:30px;font-weight:900;margin:22px 0}
+.options{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.options button{padding:16px;border-radius:12px;border:2px solid #475569;background:#fff;color:#111827;font-size:20px;font-weight:800;cursor:pointer}
+.options button.selected{outline:4px solid #38bdf8}
+.meta{display:flex;gap:14px;flex-wrap:wrap;color:#cbd5e1}
+.bar{height:18px;background:#0f172a;border-radius:999px;overflow:hidden;margin:10px 0}.fill{height:100%;background:#38bdf8;width:0}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+.btn{padding:13px 18px;border:0;border-radius:12px;font-weight:900;font-size:17px;cursor:pointer}
+.primary{background:#38bdf8;color:#082f49}.secondary{background:#475569;color:white}
+.hidden{display:none}.good{color:#86efac}.bad{color:#fda4af}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>🏆 3年級最終試煉 <small>V11.0</small></h1>
+    <p>共 20 題，總分 80 分以上即可升上4年級。</p>
+    <div class="meta"><span id="who">讀取玩家中…</span><span id="progress">題目 0/20</span><span id="score">目前 0 分</span></div>
+    <div class="bar"><div class="fill" id="fill"></div></div>
+  </div>
+
+  <div class="card" id="quizCard">
+    <div id="subject">準備中</div>
+    <div class="q" id="question">正在載入題目…</div>
+    <div class="options" id="options"></div>
+    <div class="actions">
+      <button class="btn primary" id="submitBtn" onclick="submitAnswer()">確認答案</button>
+      <button class="btn secondary" onclick="location.href='../../../'">離開試煉</button>
+    </div>
+    <div id="msg" style="margin-top:16px;font-weight:800"></div>
+  </div>
+
+  <div class="card hidden" id="resultCard">
+    <h2 id="resultTitle"></h2>
+    <p id="resultText"></p>
+    <div class="actions">
+      <button class="btn primary" onclick="location.href='../../../'">回首頁</button>
+      <button class="btn secondary" id="retryBtn" onclick="location.reload()">重新挑戰</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../../config.js?v=11.0"></script>
+<script src="../../../core/database.js?v=11.0"></script>
+<script>
+const GRADE=3;
+const NEXT_GRADE=4;
+const NEXT_LABEL="4年級";
+const QUESTIONS=[{"s": "數學", "q": "325 + 178 = ?", "a": "503", "o": ["493", "503", "513"]}, {"s": "數學", "q": "700 - 268 = ?", "a": "432", "o": ["422", "432", "442"]}, {"s": "數學", "q": "7 × 8 = ?", "a": "56", "o": ["48", "56", "64"]}, {"s": "數學", "q": "72 ÷ 8 = ?", "a": "9", "o": ["8", "9", "10"]}, {"s": "數學", "q": "有6盒鉛筆，每盒8枝，共幾枝？", "a": "48", "o": ["42", "48", "56"]}, {"s": "國語", "q": "「井井有條」最接近哪個意思？", "a": "整齊有秩序", "o": ["整齊有秩序", "非常慌張", "完全不知道"]}, {"s": "國語", "q": "「仔細」的相反詞是？", "a": "粗心", "o": ["粗心", "認真", "清楚"]}, {"s": "國語", "q": "「手忙腳亂」最接近哪個意思？", "a": "忙亂得不知所措", "o": ["忙亂得不知所措", "非常安靜", "井然有序"]}, {"s": "國語", "q": "「小美到博物館參觀展覽。」她去了哪裡？", "a": "博物館", "o": ["博物館", "市場", "操場"]}, {"s": "國語", "q": "哪一句最完整？", "a": "同學一起完成報告", "o": ["同學一起完成報告", "一起同學報告完成", "報告一起同學"]}, {"s": "英文", "q": "library 是什麼意思？", "a": "圖書館", "o": ["圖書館", "醫院", "車站"]}, {"s": "英文", "q": "Monday 是星期幾？", "a": "星期一", "o": ["星期一", "星期二", "星期五"]}, {"s": "英文", "q": "happy 是什麼意思？", "a": "開心的", "o": ["開心的", "難過的", "生氣的"]}, {"s": "英文", "q": "run 是什麼意思？", "a": "跑", "o": ["跑", "讀", "寫"]}, {"s": "英文", "q": "This is my classroom. 意思是？", "a": "這是我的教室", "o": ["這是我的教室", "這是我的公園", "這是我的醫院"]}, {"s": "自然", "q": "磁鐵同極靠近通常會？", "a": "互相排斥", "o": ["互相排斥", "互相吸引", "完全消失"]}, {"s": "自然", "q": "聲音通常和什麼有關？", "a": "物體振動", "o": ["物體振動", "物體顏色", "物體氣味"]}, {"s": "自然", "q": "植物的根主要功能之一是？", "a": "吸收水分", "o": ["吸收水分", "製造聲音", "發光"]}, {"s": "社會", "q": "地圖上的圖例用途是？", "a": "說明符號代表的事物", "o": ["說明符號代表的事物", "裝飾地圖", "計算作業"]}, {"s": "社會", "q": "使用公共設施應該？", "a": "遵守規則並愛護", "o": ["遵守規則並愛護", "任意破壞", "插隊"]}];
+
+let idx=0,correct=0,selected='';
+function $(id){return document.getElementById(id)}
+function shuffle(a){return a.slice().sort(()=>Math.random()-.5)}
+const order=shuffle(QUESTIONS);
+
+async function boot(){
+  const session=await KA_DB.getSession();
+  if(!session){ alert('請先登入。'); location.href='../../../'; return; }
+  const p=await KA_DB.getMyProfile();
+  $('who').textContent='玩家：'+p.nickname;
+  if(Number(p.grade_level)!==GRADE){ alert(`目前不是${GRADE}年級，無法進行此試煉。`); location.href='../../../'; return; }
+  const gp=await KA_DB.recalculateGradeProgress(GRADE);
+  if(gp.percent<100){ alert(`${GRADE}年級進度尚未達100%。`); location.href='../../../'; return; }
+  showQ();
+}
+
+function showQ(){
+  const q=order[idx];
+  selected='';
+  $('subject').textContent='📘 '+q.s;
+  $('question').textContent=q.q;
+  $('options').innerHTML='';
+  shuffle(q.o).forEach(x=>{
+    const b=document.createElement('button');
+    b.textContent=x;
+    b.onclick=()=>{
+      selected=x;
+      [...$('options').children].forEach(c=>c.classList.remove('selected'));
+      b.classList.add('selected');
+    };
+    $('options').appendChild(b);
+  });
+  $('progress').textContent=`題目 ${idx+1}/20`;
+  $('score').textContent=`目前 ${correct*5} 分`;
+  $('fill').style.width=((idx/20)*100)+'%';
+  $('msg').textContent='';
+  $('submitBtn').disabled=false;
+}
+
+async function submitAnswer(){
+  if(!selected){ $('msg').textContent='請先選一個答案。'; return; }
+  const q=order[idx];
+  if(selected===q.a){ correct++; $('msg').className='good'; $('msg').textContent='✅ 正確'; }
+  else{ $('msg').className='bad'; $('msg').textContent='❌ 錯誤，正確答案：'+q.a; }
+  $('submitBtn').disabled=true;
+  idx++;
+  $('score').textContent=`目前 ${correct*5} 分`;
+  $('fill').style.width=((idx/20)*100)+'%';
+  if(idx>=20) setTimeout(finish,650); else setTimeout(showQ,650);
+}
+
+async function finish(){
+  $('quizCard').classList.add('hidden');
+  $('resultCard').classList.remove('hidden');
+  const score=correct*5, passed=score>=80;
+  try{
+    await KA_DB.saveGameResult({
+      game_id:`g${GRADE}_final_exam`,grade:GRADE,subject:'all',unit_id:'final_exam',
+      score,first_correct_rate:score,final_correct_rate:score,exp_earned:0,coins_earned:0,boss:true,completed:passed
+    });
+  }catch(e){console.warn(e)}
+  if(passed){
+    await KA_DB.updateMyProfile({grade_level:NEXT_GRADE,grade_percent:0});
+    $('resultTitle').textContent='🎉 通過！正式升上'+NEXT_LABEL;
+    $('resultText').innerHTML=`最終成績：<b>${score} 分</b><br>等級已更新為「${NEXT_LABEL}」。EXP、金幣與其他資料保留。`;
+    $('retryBtn').classList.add('hidden');
+  }else{
+    $('resultTitle').textContent='📚 還差一點';
+    $('resultText').innerHTML=`最終成績：<b>${score} 分</b><br>需要80分以上才能升級。`;
+  }
+}
+boot();
+</script>
+</body>
+</html>
