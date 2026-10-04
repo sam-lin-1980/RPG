@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>知識學院 RPG</title><link rel="stylesheet" href="../../../../core/styles.css"></head>
+<body>
+<div class="wrap">
+  <div class="top"><div><div class="brand" id="packTitle">知識學院 RPG</div><div class="muted" id="packSub"></div></div>
+  <div><a class="btn secondary" href="../../../../index.html" style="text-decoration:none">🏫 主頁</a> <button class="audio" id="musicBtn">🎵 音樂：開</button> <button class="audio" id="sfxBtn">🔊 音效：開</button></div></div>
+  <div class="info">
+    <div class="card pad"><b>🧙 小勇者</b><div class="pills"><span class="pill">⭐ EXP <b id="exp">0</b></span><span class="pill">💰 金幣 <b id="coins">0</b></span><span class="pill">🎟️ 入場券 <b id="tickets">0</b></span></div></div>
+    <div class="card pad"><b>📚 單元熟練度</b><div style="font-size:32px;font-weight:900"><span id="mastery">0</span> 分</div><div class="bar"><div class="fill" id="masteryBar"></div></div></div>
+  </div>
+  <div class="menu" id="menu">
+    <div class="card"><h2>👾 小怪練習</h2><button class="modebtn" id="mobBtn"><b>開始練習</b><br><span class="muted">10題；80分以上取得入場券</span></button></div>
+    <div class="card"><h2>👑 Boss 關</h2><button class="modebtn" id="bossBtn"><b>挑戰 Boss</b><br><span class="muted" id="bossReq"></span></button></div>
+  </div>
+  <section class="card arena" id="arena">
+    <div class="top"><div><h2 id="battleTitle" style="margin:0"></h2></div><button class="btn secondary" id="quit">離開戰鬥</button></div>
+    <div class="combat">
+      <div class="fighter"><b>🧙 小勇者</b><div>HP <span id="php">100/100</span></div><div class="bar"><div class="fill" id="phpbar" style="width:100%;background:linear-gradient(90deg,#fb7185,#ef4444)"></div></div><div style="margin-top:8px">MP <span id="mp">0/100</span></div><div class="bar"><div class="fill" id="mpbar" style="width:0%"></div></div></div>
+      <div class="fighter"><div style="display:flex;gap:12px;align-items:center"><div class="enemy" id="enemyIcon">👾</div><div style="flex:1"><b id="enemyName"></b><div>HP <span id="ehp">100/100</span></div><div class="bar"><div class="fill" id="ehpbar" style="width:100%;background:linear-gradient(90deg,#fb7185,#ef4444)"></div></div></div></div></div>
+    </div>
+    <div class="actions" id="skills" style="display:none">
+      <button class="btn primary" data-skill="normal">⚔️ 普攻<br><span class="muted">20傷害｜MP+20</span></button>
+      <button class="btn magic" data-skill="magic">✨ 魔法<br><span class="muted">40傷害｜40MP</span></button>
+      <button class="btn ultimate" data-skill="ultimate">🔥 必殺<br><span class="muted">70傷害｜100MP</span></button>
+    </div>
+    <div class="qbox"><div class="qtype" id="qtype">準備戰鬥</div><div class="question" id="question">—</div><div class="answer" id="answer"></div><div style="margin-top:12px"><button class="btn primary" id="submit" style="display:none">確認答案</button></div><div class="msg" id="msg">開始後出題。</div></div>
+    <div class="metrics"><div class="metric">題數<b id="turns">0</b></div><div class="metric">首次答對<b id="first">0</b></div><div class="metric">最終答對<b id="final">0</b></div><div class="metric">成績<b id="score">0</b></div></div>
+  </section>
+</div>
+<div class="overlay" id="overlay"><div class="card modal"><h2 id="resultTitle"></h2><div id="resultBody" style="line-height:1.8"></div><button class="btn primary" id="closeResult" style="margin-top:15px">回到教室</button></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../../../../config.js?v=3"></script><script src="../../../../core/database.js?v=3"></script><script src="pack.js"></script><script src="../../../../core/engine.js?v=3"></script>
+</body></html>

@@ -78,6 +78,79 @@ function renderQ(q){
   for(const inp of q.inputs){
     if(inp.kind==='number'||inp.kind==='text'){
       const e=document.createElement('input');e.dataset.key=inp.key;e.type=inp.kind==='number'?'number':'text';e.placeholder=inp.placeholder||'?';$('answer').appendChild(e)
+    }else if(inp.kind==='reorder'){
+      const wrap=document.createElement('div');
+      wrap.style.width='100%';
+
+      const picked=document.createElement('div');
+      picked.className='option-grid';
+      picked.style.marginBottom='12px';
+      picked.dataset.reorderKey=inp.key;
+      picked.dataset.value='';
+
+      const bank=document.createElement('div');
+      bank.className='option-grid';
+
+      const items=(inp.items||[]).map((label,idx)=>({id:String(idx),label}));
+      for(const item of items){
+        const btn=document.createElement('button');
+        btn.type='button';
+        btn.className='option-card';
+        btn.textContent=item.label;
+        btn.dataset.itemId=item.id;
+        btn.onclick=()=>{
+          const clone=btn.cloneNode(true);
+          clone.onclick=()=>{
+            bank.appendChild(btn);
+            clone.remove();
+            const vals=[...picked.querySelectorAll('.option-card')].map(x=>x.textContent);
+            picked.dataset.value=JSON.stringify(vals);
+          };
+          picked.appendChild(clone);
+          btn.remove();
+          const vals=[...picked.querySelectorAll('.option-card')].map(x=>x.textContent);
+          picked.dataset.value=JSON.stringify(vals);
+        };
+        bank.appendChild(btn);
+      }
+
+      const clear=document.createElement('button');
+      clear.type='button';
+      clear.className='btn secondary';
+      clear.textContent='清空重排';
+      clear.style.marginTop='10px';
+      clear.onclick=()=>{
+        const chosen=[...picked.querySelectorAll('.option-card')];
+        chosen.forEach(c=>{
+          const id=c.dataset.itemId;
+          const original=document.createElement('button');
+          original.type='button';
+          original.className='option-card';
+          original.textContent=c.textContent;
+          original.dataset.itemId=id;
+          original.onclick=()=>{
+            const clone=original.cloneNode(true);
+            clone.onclick=()=>{
+              bank.appendChild(original);
+              clone.remove();
+              const vals=[...picked.querySelectorAll('.option-card')].map(x=>x.textContent);
+              picked.dataset.value=JSON.stringify(vals);
+            };
+            picked.appendChild(clone);
+            original.remove();
+            const vals=[...picked.querySelectorAll('.option-card')].map(x=>x.textContent);
+            picked.dataset.value=JSON.stringify(vals);
+          };
+          bank.appendChild(original);
+          c.remove();
+        });
+        picked.dataset.value='[]';
+      };
+
+      wrap.appendChild(picked);
+      wrap.appendChild(bank);
+      wrap.appendChild(clear);
+      $('answer').appendChild(wrap);
     }else{
       const h=document.createElement('div');h.className='option-grid';h.dataset.choiceKey=inp.key;h.dataset.value='';
       for(const [value,label] of inp.options){const b=document.createElement('button');b.type='button';b.className='option-card';b.textContent=label;b.onclick=()=>{h.dataset.value=value;h.querySelectorAll('.option-card').forEach(x=>x.classList.toggle('selected',x===b))};h.appendChild(b)}
@@ -86,12 +159,20 @@ function renderQ(q){
   }
   $('submit').style.display='inline-block';$('msg').className='msg';$('msg').textContent='請作答。第一次答對為 100% 效果。';updateUI()
 }
-function readAns(){const v={};$('answer').querySelectorAll('[data-key]').forEach(e=>v[e.dataset.key]=e.value);$('answer').querySelectorAll('[data-choice-key]').forEach(e=>v[e.dataset.choiceKey]=e.dataset.value);return v}
+function readAns(){
+  const v={};
+  $('answer').querySelectorAll('[data-key]').forEach(e=>v[e.dataset.key]=e.value);
+  $('answer').querySelectorAll('[data-choice-key]').forEach(e=>v[e.dataset.choiceKey]=e.dataset.value);
+  $('answer').querySelectorAll('[data-reorder-key]').forEach(e=>{
+    try{v[e.dataset.reorderKey]=JSON.parse(e.dataset.value||'[]')}catch(_){v[e.dataset.reorderKey]=[]}
+  });
+  return v
+}
 function updateUI(){
   if(!state)return;$('php').textContent=`${state.playerHp}/100`;$('phpbar').style.width=state.playerHp+'%';$('mp').textContent=`${state.mp}/100`;$('mpbar').style.width=state.mp+'%';
   $('ehp').textContent=`${Math.max(0,state.enemyHp)}/${state.enemyMax}`;$('ehpbar').style.width=clamp(state.enemyHp/state.enemyMax*100,0,100)+'%';
   $('turns').textContent=state.attempted;$('first').textContent=state.firstCorrect;$('final').textContent=state.finalCorrect;$('score').textContent=state.attempted?Math.round(state.finalCorrect/state.attempted*100):0;
-  document.querySelectorAll('[data-skill]').forEach(b=>{const s=b.dataset.skill;b.disabled=!!currentQuestion||(s==='magic'&&state.mp<40)||(s==='ultimate'&&state.mp<100)})
+  document.querySelectorAll('[data-skill]').forEach(b=>{const s=b.dataset.skill;b.disabled=!!currentQuestion||state.phase!=='player'||(s==='magic'&&state.mp<40)||(s==='ultimate'&&state.mp<100)})
 }
 function startMob(){
   startMusic();state={mode:'mob',playerHp:100,mp:0,enemyHp:100,enemyMax:100,attempted:0,firstCorrect:0,finalCorrect:0,qIndex:0,pending:null};
@@ -103,16 +184,61 @@ async function startBoss(){
   progress.tickets-=pack.ticketCost;save();
   if(useDb){ try{ await KA_DB.setTicket(packGrade,packSubject,progress.tickets); }catch(e){ alert('扣除入場券失敗：'+e.message); return; } }
   startMusic();
-  state={mode:'boss',playerHp:100,mp:0,enemyHp:220,enemyMax:220,attempted:0,firstCorrect:0,finalCorrect:0,pending:null};
+  state={mode:'boss',playerHp:100,mp:0,enemyHp:220,enemyMax:220,attempted:0,firstCorrect:0,finalCorrect:0,pending:null,phase:'player'};
   $('menu').style.display='none';$('arena').classList.add('active');$('skills').style.display='flex';$('battleTitle').textContent=`👑 ${pack.bossName}`;$('enemyIcon').textContent=pack.bossIcon;$('enemyName').textContent=pack.bossName;
-  currentQuestion=null;$('qtype').textContent='你的回合';$('question').textContent='選擇技能';$('answer').innerHTML='';$('submit').style.display='none';$('msg').textContent='普攻與防禦都能累積 MP。';updateUI()
+  currentQuestion=null;state.phase='player';$('qtype').textContent='你的回合';$('question').textContent='選擇技能';$('answer').innerHTML='';$('submit').style.display='none';$('msg').textContent='普攻與防禦都能累積 MP。';updateUI()
 }
 function chooseSkill(s){
-  if(currentQuestion)return;if(s==='magic'&&state.mp<40)return;if(s==='ultimate'&&state.mp<100)return;
+  if(currentQuestion || state.phase!=='player')return;if(s==='magic'&&state.mp<40)return;if(s==='ultimate'&&state.mp<100)return;
   if(s==='magic')state.mp-=40;if(s==='ultimate')state.mp-=100;state.pending=s;renderQ(qByType(s))
 }
 function submit(){
-  if(!currentQuestion)return;const ok=currentQuestion.check(readAns());
+  if(!currentQuestion)return;
+  const isBossDefense = state?.mode==='boss' && state?.phase==='boss' && state?.pending==='defense';
+  const ok=currentQuestion.check(readAns());
+
+  if(isBossDefense){
+    if(ok){
+      state.attempted++; state.finalCorrect++;
+      progress.stats.attempted++; progress.stats.finalCorrect++;
+      const full=attempt===1;
+      if(full){ state.firstCorrect++; progress.stats.firstCorrect++; }
+      else { progress.stats.rescueSuccess++; }
+      state.mp=clamp(state.mp+(full?20:10),0,100);
+      sfx('guard');
+      $('msg').className='msg good';
+      $('msg').innerHTML=`🛡️ 防禦成功！Boss 攻擊被擋下。 🔵 MP +${full?20:10}`;
+      currentQuestion=null; $('submit').style.display='none';
+      state.phase='player'; state.pending=null;
+      $('qtype').textContent='你的回合';
+      $('question').textContent='選擇技能';
+      $('answer').innerHTML='';
+      updateUI();
+      return;
+    }
+    if(attempt===1){
+      attempt=2; sfx('bad');
+      $('msg').className='msg bad';
+      $('msg').innerHTML='❌ 防禦第一次判斷錯誤。還有一次補判；補判成功可減半 Boss 傷害。';
+      return;
+    }
+    state.attempted++; progress.stats.attempted++;
+    sfx('bad');
+    const dmg=10;
+    state.playerHp=Math.max(0,state.playerHp-dmg);
+    $('msg').className='msg bad';
+    $('msg').innerHTML=`💥 防禦失敗！Boss 對你造成 ${dmg} 傷害。`;
+    currentQuestion=null; $('submit').style.display='none';
+    updateUI();
+    if(state.playerHp<=0){ setTimeout(()=>finishBoss(),500); return; }
+    state.phase='player'; state.pending=null;
+    $('qtype').textContent='你的回合';
+    $('question').textContent='選擇技能';
+    $('answer').innerHTML='';
+    updateUI();
+    return;
+  }
+
   if(ok){
     state.attempted++;state.finalCorrect++;progress.stats.attempted++;progress.stats.finalCorrect++;
     const full=attempt===1;if(full){state.firstCorrect++;progress.stats.firstCorrect++}else{progress.stats.rescueSuccess++}
@@ -127,16 +253,30 @@ function submit(){
       if(state.mode==='boss'&&state.pending==='normal')state.mp=clamp(state.mp+20,0,100)
     }
     currentQuestion=null;$('submit').style.display='none';updateUI();
-    setTimeout(()=>state.mode==='mob'?nextMob():(state.enemyHp<=0?finishBoss():bossDefense()),600)
+    setTimeout(()=>{
+      if(state.mode==='mob'){ nextMob(); return; }
+      if(state.enemyHp<=0){ finishBoss(); return; }
+      state.phase='boss';
+      bossDefense();
+    },600)
   }else if(attempt===1){
     attempt=2;sfx('bad');$('msg').className='msg bad';$('msg').innerHTML='❌ 第一次不正確，還有一次補答；成功效果為 50%。'
   }else{
     state.attempted++;progress.stats.attempted++;sfx('bad');$('msg').className='msg bad';$('msg').innerHTML='❌ 第二次仍錯，本回合效果為 0。';
-    currentQuestion=null;$('submit').style.display='none';updateUI();setTimeout(()=>state.mode==='mob'?nextMob():bossDefense(),600)
+    currentQuestion=null;$('submit').style.display='none';updateUI();
+    setTimeout(()=>{
+      if(state.mode==='mob'){ nextMob(); return; }
+      state.phase='boss';
+      bossDefense();
+    },600)
   }
 }
 function bossDefense(){
-  state.pending='defense';const q=qByType('defense');q.label='🛡️ Boss 反擊・防禦';q.isBossDefense=true;renderQ(q)
+  state.phase='boss';
+  state.pending='defense';
+  const q=qByType('defense');
+  q.label='🛡️ Boss 回合・防禦';
+  renderQ(q);
 }
 async function finishMob(){
   const sc=Math.round(state.finalCorrect/state.attempted*100),fc=Math.round(state.firstCorrect/state.attempted*100),pass=sc>=80;

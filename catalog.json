@@ -9,6 +9,14 @@
   },
   {
     "grade": 1,
+    "title": "1年級數學｜10以內減法",
+    "desc": "減法小怪、魔法、防禦與 Boss 戰",
+    "icon": "➖",
+    "path": "content/g1/math/subtraction10/",
+    "subject": "math"
+  },
+  {
+    "grade": 1,
     "title": "1年級國語",
     "desc": "字詞與句子",
     "icon": "📖",

@@ -10,9 +10,9 @@ bossName:"英文魔王",
 bossIcon:"🧌",
 ticketCost:3,
 generators:{
-  normal:()=>({label:"⚔️ 普攻",prompt:"A 的小寫是？",inputs:[{kind:"text",key:"x"}],check:v=>String(v.x).trim()==="a"}),
-  magic:()=>({label:"✨ 魔法",prompt:"A 的小寫是？",inputs:[{kind:"text",key:"x"}],check:v=>String(v.x).trim()==="a"}),
-  defense:()=>({label:"🛡️ 防禦",prompt:"A 的小寫是 a。",inputs:[{kind:"choice",key:"x",options:[["yes","⭕ 正確"],["no","❌ 錯誤"]]}],check:v=>v.x==="yes"}),
-  ultimate:()=>({label:"🔥 必殺",prompt:"A 的小寫是？",inputs:[{kind:"text",key:"x"}],check:v=>String(v.x).trim()==="a"})
+  normal:()=>({label:"⚔️ 普攻",prompt:"Which one is a color?",inputs:[{kind:"choice",key:"x",options:[["red", "red"], ["cat", "cat"], ["book", "book"]]}],check:v=>v.x==="red"}),
+  magic:()=>({label:"✨ 魔法",prompt:"Which one is a color?",inputs:[{kind:"choice",key:"x",options:[["red", "red"], ["cat", "cat"], ["book", "book"]]}],check:v=>v.x==="red"}),
+  defense:()=>({label:"🛡️ 防禦",prompt:"這個敘述正確嗎？",inputs:[{kind:"choice",key:"x",options:[["yes","⭕ 正確"],["no","❌ 錯誤"]]}],check:v=>v.x==="yes"}),
+  ultimate:()=>({label:"🔥 必殺",prompt:"Which one is a color?",inputs:[{kind:"choice",key:"x",options:[["red", "red"], ["cat", "cat"], ["book", "book"]]}],check:v=>v.x==="red"})
 }
 };
