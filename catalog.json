@@ -42,7 +42,7 @@
   {
     "grade": 2,
     "title": "2年級數學",
-    "desc": "300題｜100以內加減、乘法初步、應用題",
+    "desc": "預留入口｜可直接替換此科目資料夾",
     "icon": "📐",
     "path": "content/g2/math/basic/",
     "subject": "math"
@@ -50,7 +50,7 @@
   {
     "grade": 2,
     "title": "2年級國語",
-    "desc": "300題｜詞語、句子、閱讀理解",
+    "desc": "預留入口｜可直接替換此科目資料夾",
     "icon": "📖",
     "path": "content/g2/chinese/basic/",
     "subject": "chinese"
@@ -58,7 +58,7 @@
   {
     "grade": 2,
     "title": "2年級英文",
-    "desc": "300題｜生活單字、拼字、基礎句型",
+    "desc": "預留入口｜可直接替換此科目資料夾",
     "icon": "🔤",
     "path": "content/g2/english/basic/",
     "subject": "english"
@@ -66,7 +66,7 @@
   {
     "grade": 2,
     "title": "2年級生活",
-    "desc": "300題｜安全、健康與生活觀察",
+    "desc": "預留入口｜可直接替換此科目資料夾",
     "icon": "🌱",
     "path": "content/g2/life/basic/",
     "subject": "life"
@@ -74,7 +74,7 @@
   {
     "grade": 3,
     "title": "3年級數學",
-    "desc": "預留入口｜可直接替換此科目資料夾",
+    "desc": "300題｜三位數加減、乘除與應用題",
     "icon": "📐",
     "path": "content/g3/math/basic/",
     "subject": "math"
@@ -82,7 +82,7 @@
   {
     "grade": 3,
     "title": "3年級國語",
-    "desc": "預留入口｜可直接替換此科目資料夾",
+    "desc": "300題｜詞語、成語、句型與閱讀",
     "icon": "📖",
     "path": "content/g3/chinese/basic/",
     "subject": "chinese"
@@ -90,7 +90,7 @@
   {
     "grade": 3,
     "title": "3年級英文",
-    "desc": "預留入口｜可直接替換此科目資料夾",
+    "desc": "300題｜生活單字、句型與閱讀",
     "icon": "🔤",
     "path": "content/g3/english/basic/",
     "subject": "english"
@@ -98,7 +98,7 @@
   {
     "grade": 3,
     "title": "3年級自然",
-    "desc": "預留入口｜可直接替換此科目資料夾",
+    "desc": "300題｜植物、水、空氣、光與聲音",
     "icon": "🔬",
     "path": "content/g3/science/basic/",
     "subject": "science"
@@ -106,7 +106,7 @@
   {
     "grade": 3,
     "title": "3年級社會",
-    "desc": "預留入口｜可直接替換此科目資料夾",
+    "desc": "300題｜社區、地圖與公共生活",
     "icon": "🌏",
     "path": "content/g3/social/basic/",
     "subject": "social"
