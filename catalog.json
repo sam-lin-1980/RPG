@@ -154,7 +154,7 @@
   {
     "grade": 5,
     "title": "5年級數學",
-    "desc": "300題｜因倍數、分數小數、面積體積與應用",
+    "desc": "預留入口｜可直接替換此科目資料夾",
     "icon": "📐",
     "path": "content/g5/math/basic/",
     "subject": "math"
@@ -162,7 +162,7 @@
   {
     "grade": 5,
     "title": "5年級國語",
-    "desc": "300題｜詞語、成語、句型與閱讀理解",
+    "desc": "預留入口｜可直接替換此科目資料夾",
     "icon": "📖",
     "path": "content/g5/chinese/basic/",
     "subject": "chinese"
@@ -170,7 +170,7 @@
   {
     "grade": 5,
     "title": "5年級英文",
-    "desc": "300題｜生活單字、句型與簡易閱讀",
+    "desc": "預留入口｜可直接替換此科目資料夾",
     "icon": "🔤",
     "path": "content/g5/english/basic/",
     "subject": "english"
@@ -178,7 +178,7 @@
   {
     "grade": 5,
     "title": "5年級自然",
-    "desc": "300題｜力、熱、植物繁殖、天文與生態",
+    "desc": "預留入口｜可直接替換此科目資料夾",
     "icon": "🔬",
     "path": "content/g5/science/basic/",
     "subject": "science"
@@ -186,7 +186,7 @@
   {
     "grade": 5,
     "title": "5年級社會",
-    "desc": "300題｜人口、產業、公共事務與文化",
+    "desc": "預留入口｜可直接替換此科目資料夾",
     "icon": "🌏",
     "path": "content/g5/social/basic/",
     "subject": "social"
@@ -194,7 +194,7 @@
   {
     "grade": 6,
     "title": "6年級數學",
-    "desc": "預留入口｜可直接替換此科目資料夾",
+    "desc": "300題｜比率、百分率、分數小數、速率與體積",
     "icon": "📐",
     "path": "content/g6/math/basic/",
     "subject": "math"
@@ -202,7 +202,7 @@
   {
     "grade": 6,
     "title": "6年級國語",
-    "desc": "預留入口｜可直接替換此科目資料夾",
+    "desc": "300題｜詞語、成語、句型與閱讀理解",
     "icon": "📖",
     "path": "content/g6/chinese/basic/",
     "subject": "chinese"
@@ -210,7 +210,7 @@
   {
     "grade": 6,
     "title": "6年級英文",
-    "desc": "預留入口｜可直接替換此科目資料夾",
+    "desc": "300題｜生活單字、句型、時態與簡易閱讀",
     "icon": "🔤",
     "path": "content/g6/english/basic/",
     "subject": "english"
@@ -218,7 +218,7 @@
   {
     "grade": 6,
     "title": "6年級自然",
-    "desc": "預留入口｜可直接替換此科目資料夾",
+    "desc": "300題｜電路、機械、天文、生態與水循環",
     "icon": "🔬",
     "path": "content/g6/science/basic/",
     "subject": "science"
@@ -226,7 +226,7 @@
   {
     "grade": 6,
     "title": "6年級社會",
-    "desc": "預留入口｜可直接替換此科目資料夾",
+    "desc": "300題｜民主、人權、全球化與永續發展",
     "icon": "🌏",
     "path": "content/g6/social/basic/",
     "subject": "social"
