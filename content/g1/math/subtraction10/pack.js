@@ -53,11 +53,12 @@ magic:({rand})=>{
     check:v=>v.op==="+" ? a+b===c : a-b===c
   }
 },
-defense:({rand,pick,clamp})=>{
+defense:({rand})=>{
   let a,b;
   do{a=rand(1,10);b=rand(0,a)}while(a-b<0);
   const real=a-b, ok=Math.random()<0.5;
-  const shown=ok?real:clamp(real+pick([-2,-1,1,2]),0,10);
+  let shown=real;
+  if(!ok){ do{shown=rand(0,10)}while(shown===real); }
   return{
     label:"🛡️ 防禦",
     prompt:`${a} - ${b} = ${shown}`,
