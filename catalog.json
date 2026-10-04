@@ -42,7 +42,7 @@
   {
     "grade": 2,
     "title": "2年級數學",
-    "desc": "預留入口｜可直接替換此科目資料夾",
+    "desc": "300題｜100以內加減、乘法初步、應用題",
     "icon": "📐",
     "path": "content/g2/math/basic/",
     "subject": "math"
@@ -50,7 +50,7 @@
   {
     "grade": 2,
     "title": "2年級國語",
-    "desc": "預留入口｜可直接替換此科目資料夾",
+    "desc": "300題｜詞語、句子、閱讀理解",
     "icon": "📖",
     "path": "content/g2/chinese/basic/",
     "subject": "chinese"
@@ -58,7 +58,7 @@
   {
     "grade": 2,
     "title": "2年級英文",
-    "desc": "預留入口｜可直接替換此科目資料夾",
+    "desc": "300題｜生活單字、拼字、基礎句型",
     "icon": "🔤",
     "path": "content/g2/english/basic/",
     "subject": "english"
@@ -66,7 +66,7 @@
   {
     "grade": 2,
     "title": "2年級生活",
-    "desc": "預留入口｜可直接替換此科目資料夾",
+    "desc": "300題｜安全、健康與生活觀察",
     "icon": "🌱",
     "path": "content/g2/life/basic/",
     "subject": "life"
