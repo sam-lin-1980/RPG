@@ -10,9 +10,9 @@ bossName:"語文魔王",
 bossIcon:"👺",
 ticketCost:3,
 generators:{
-  normal:()=>({label:"⚔️ 普攻",prompt:"「大」的相反詞是？",inputs:[{kind:"text",key:"x"}],check:v=>String(v.x).trim()==="小"}),
-  magic:()=>({label:"✨ 魔法",prompt:"「大」的相反詞是？",inputs:[{kind:"text",key:"x"}],check:v=>String(v.x).trim()==="小"}),
-  defense:()=>({label:"🛡️ 防禦",prompt:"「小」和「大」意思相反。",inputs:[{kind:"choice",key:"x",options:[["yes","⭕ 正確"],["no","❌ 錯誤"]]}],check:v=>v.x==="yes"}),
-  ultimate:()=>({label:"🔥 必殺",prompt:"「大」的相反詞是？",inputs:[{kind:"text",key:"x"}],check:v=>String(v.x).trim()==="小"})
+  normal:()=>({label:"⚔️ 普攻",prompt:"哪一個詞語使用比較適合？",inputs:[{kind:"choice",key:"x",options:[["學校", "學校"], ["雨傘", "雨傘"], ["鉛筆盒", "鉛筆盒"]]}],check:v=>v.x==="學校"}),
+  magic:()=>({label:"✨ 魔法",prompt:"哪一個詞語使用比較適合？",inputs:[{kind:"choice",key:"x",options:[["學校", "學校"], ["雨傘", "雨傘"], ["鉛筆盒", "鉛筆盒"]]}],check:v=>v.x==="學校"}),
+  defense:()=>({label:"🛡️ 防禦",prompt:"這個敘述正確嗎？",inputs:[{kind:"choice",key:"x",options:[["yes","⭕ 正確"],["no","❌ 錯誤"]]}],check:v=>v.x==="yes"}),
+  ultimate:()=>({label:"🔥 必殺",prompt:"哪一個詞語使用比較適合？",inputs:[{kind:"choice",key:"x",options:[["學校", "學校"], ["雨傘", "雨傘"], ["鉛筆盒", "鉛筆盒"]]}],check:v=>v.x==="學校"})
 }
 };

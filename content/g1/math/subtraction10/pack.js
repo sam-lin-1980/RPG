@@ -1,86 +1,20 @@
+const BANK=[{"type": "normal", "prompt": "0 - 0 = ?", "answer": 0}, {"type": "normal", "prompt": "1 - 0 = ?", "answer": 1}, {"type": "normal", "prompt": "1 - 1 = ?", "answer": 0}, {"type": "normal", "prompt": "2 - 0 = ?", "answer": 2}, {"type": "normal", "prompt": "2 - 1 = ?", "answer": 1}, {"type": "normal", "prompt": "2 - 2 = ?", "answer": 0}, {"type": "normal", "prompt": "3 - 0 = ?", "answer": 3}, {"type": "normal", "prompt": "3 - 1 = ?", "answer": 2}, {"type": "normal", "prompt": "3 - 2 = ?", "answer": 1}, {"type": "normal", "prompt": "3 - 3 = ?", "answer": 0}, {"type": "normal", "prompt": "4 - 0 = ?", "answer": 4}, {"type": "normal", "prompt": "4 - 1 = ?", "answer": 3}, {"type": "normal", "prompt": "4 - 2 = ?", "answer": 2}, {"type": "normal", "prompt": "4 - 3 = ?", "answer": 1}, {"type": "normal", "prompt": "4 - 4 = ?", "answer": 0}, {"type": "normal", "prompt": "5 - 0 = ?", "answer": 5}, {"type": "normal", "prompt": "5 - 1 = ?", "answer": 4}, {"type": "normal", "prompt": "5 - 2 = ?", "answer": 3}, {"type": "normal", "prompt": "5 - 3 = ?", "answer": 2}, {"type": "normal", "prompt": "5 - 4 = ?", "answer": 1}, {"type": "normal", "prompt": "5 - 5 = ?", "answer": 0}, {"type": "normal", "prompt": "6 - 0 = ?", "answer": 6}, {"type": "normal", "prompt": "6 - 1 = ?", "answer": 5}, {"type": "normal", "prompt": "6 - 2 = ?", "answer": 4}, {"type": "normal", "prompt": "6 - 3 = ?", "answer": 3}, {"type": "normal", "prompt": "6 - 4 = ?", "answer": 2}, {"type": "normal", "prompt": "6 - 5 = ?", "answer": 1}, {"type": "normal", "prompt": "6 - 6 = ?", "answer": 0}, {"type": "normal", "prompt": "7 - 0 = ?", "answer": 7}, {"type": "normal", "prompt": "7 - 1 = ?", "answer": 6}, {"type": "normal", "prompt": "7 - 2 = ?", "answer": 5}, {"type": "normal", "prompt": "7 - 3 = ?", "answer": 4}, {"type": "normal", "prompt": "7 - 4 = ?", "answer": 3}, {"type": "normal", "prompt": "7 - 5 = ?", "answer": 2}, {"type": "normal", "prompt": "7 - 6 = ?", "answer": 1}, {"type": "normal", "prompt": "7 - 7 = ?", "answer": 0}, {"type": "normal", "prompt": "8 - 0 = ?", "answer": 8}, {"type": "normal", "prompt": "8 - 1 = ?", "answer": 7}, {"type": "normal", "prompt": "8 - 2 = ?", "answer": 6}, {"type": "normal", "prompt": "8 - 3 = ?", "answer": 5}, {"type": "normal", "prompt": "8 - 4 = ?", "answer": 4}, {"type": "normal", "prompt": "8 - 5 = ?", "answer": 3}, {"type": "normal", "prompt": "8 - 6 = ?", "answer": 2}, {"type": "normal", "prompt": "8 - 7 = ?", "answer": 1}, {"type": "normal", "prompt": "8 - 8 = ?", "answer": 0}, {"type": "normal", "prompt": "9 - 0 = ?", "answer": 9}, {"type": "normal", "prompt": "9 - 1 = ?", "answer": 8}, {"type": "normal", "prompt": "9 - 2 = ?", "answer": 7}, {"type": "normal", "prompt": "9 - 3 = ?", "answer": 6}, {"type": "normal", "prompt": "9 - 4 = ?", "answer": 5}, {"type": "normal", "prompt": "9 - 5 = ?", "answer": 4}, {"type": "normal", "prompt": "9 - 6 = ?", "answer": 3}, {"type": "normal", "prompt": "9 - 7 = ?", "answer": 2}, {"type": "normal", "prompt": "9 - 8 = ?", "answer": 1}, {"type": "normal", "prompt": "9 - 9 = ?", "answer": 0}, {"type": "normal", "prompt": "10 - 0 = ?", "answer": 10}, {"type": "normal", "prompt": "10 - 1 = ?", "answer": 9}, {"type": "normal", "prompt": "10 - 2 = ?", "answer": 8}, {"type": "normal", "prompt": "10 - 3 = ?", "answer": 7}, {"type": "normal", "prompt": "10 - 4 = ?", "answer": 6}, {"type": "normal", "prompt": "10 - 5 = ?", "answer": 5}, {"type": "normal", "prompt": "10 - 6 = ?", "answer": 4}, {"type": "normal", "prompt": "10 - 7 = ?", "answer": 3}, {"type": "normal", "prompt": "10 - 8 = ?", "answer": 2}, {"type": "normal", "prompt": "10 - 9 = ?", "answer": 1}, {"type": "normal", "prompt": "10 - 10 = ?", "answer": 0}, {"type": "magic", "prompt": "0 - ? = 0", "answer": 0}, {"type": "magic", "prompt": "1 - ? = 1", "answer": 0}, {"type": "magic", "prompt": "1 - ? = 0", "answer": 1}, {"type": "magic", "prompt": "2 - ? = 2", "answer": 0}, {"type": "magic", "prompt": "2 - ? = 1", "answer": 1}, {"type": "magic", "prompt": "2 - ? = 0", "answer": 2}, {"type": "magic", "prompt": "3 - ? = 3", "answer": 0}, {"type": "magic", "prompt": "3 - ? = 2", "answer": 1}, {"type": "magic", "prompt": "3 - ? = 1", "answer": 2}, {"type": "magic", "prompt": "3 - ? = 0", "answer": 3}, {"type": "magic", "prompt": "4 - ? = 4", "answer": 0}, {"type": "magic", "prompt": "4 - ? = 3", "answer": 1}, {"type": "magic", "prompt": "4 - ? = 2", "answer": 2}, {"type": "magic", "prompt": "4 - ? = 1", "answer": 3}, {"type": "magic", "prompt": "4 - ? = 0", "answer": 4}, {"type": "magic", "prompt": "5 - ? = 5", "answer": 0}, {"type": "magic", "prompt": "5 - ? = 4", "answer": 1}, {"type": "magic", "prompt": "5 - ? = 3", "answer": 2}, {"type": "magic", "prompt": "5 - ? = 2", "answer": 3}, {"type": "magic", "prompt": "5 - ? = 1", "answer": 4}, {"type": "magic", "prompt": "5 - ? = 0", "answer": 5}, {"type": "magic", "prompt": "6 - ? = 6", "answer": 0}, {"type": "magic", "prompt": "6 - ? = 5", "answer": 1}, {"type": "magic", "prompt": "6 - ? = 4", "answer": 2}, {"type": "magic", "prompt": "6 - ? = 3", "answer": 3}, {"type": "magic", "prompt": "6 - ? = 2", "answer": 4}, {"type": "magic", "prompt": "6 - ? = 1", "answer": 5}, {"type": "magic", "prompt": "6 - ? = 0", "answer": 6}, {"type": "magic", "prompt": "7 - ? = 7", "answer": 0}, {"type": "magic", "prompt": "7 - ? = 6", "answer": 1}, {"type": "magic", "prompt": "7 - ? = 5", "answer": 2}, {"type": "magic", "prompt": "7 - ? = 4", "answer": 3}, {"type": "magic", "prompt": "7 - ? = 3", "answer": 4}, {"type": "magic", "prompt": "7 - ? = 2", "answer": 5}, {"type": "magic", "prompt": "7 - ? = 1", "answer": 6}, {"type": "magic", "prompt": "7 - ? = 0", "answer": 7}, {"type": "magic", "prompt": "8 - ? = 8", "answer": 0}, {"type": "magic", "prompt": "8 - ? = 7", "answer": 1}, {"type": "magic", "prompt": "8 - ? = 6", "answer": 2}, {"type": "magic", "prompt": "8 - ? = 5", "answer": 3}, {"type": "magic", "prompt": "8 - ? = 4", "answer": 4}, {"type": "magic", "prompt": "8 - ? = 3", "answer": 5}, {"type": "magic", "prompt": "8 - ? = 2", "answer": 6}, {"type": "magic", "prompt": "8 - ? = 1", "answer": 7}, {"type": "magic", "prompt": "8 - ? = 0", "answer": 8}, {"type": "magic", "prompt": "9 - ? = 9", "answer": 0}, {"type": "magic", "prompt": "9 - ? = 8", "answer": 1}, {"type": "magic", "prompt": "9 - ? = 7", "answer": 2}, {"type": "magic", "prompt": "9 - ? = 6", "answer": 3}, {"type": "magic", "prompt": "9 - ? = 5", "answer": 4}, {"type": "magic", "prompt": "9 - ? = 4", "answer": 5}, {"type": "magic", "prompt": "9 - ? = 3", "answer": 6}, {"type": "magic", "prompt": "9 - ? = 2", "answer": 7}, {"type": "magic", "prompt": "9 - ? = 1", "answer": 8}, {"type": "magic", "prompt": "9 - ? = 0", "answer": 9}, {"type": "magic", "prompt": "10 - ? = 10", "answer": 0}, {"type": "magic", "prompt": "10 - ? = 9", "answer": 1}, {"type": "magic", "prompt": "10 - ? = 8", "answer": 2}, {"type": "magic", "prompt": "10 - ? = 7", "answer": 3}, {"type": "magic", "prompt": "10 - ? = 6", "answer": 4}, {"type": "magic", "prompt": "10 - ? = 5", "answer": 5}, {"type": "magic", "prompt": "10 - ? = 4", "answer": 6}, {"type": "magic", "prompt": "10 - ? = 3", "answer": 7}, {"type": "magic", "prompt": "10 - ? = 2", "answer": 8}, {"type": "ultimate", "prompt": "10 - ? = 1", "answer": 9}, {"type": "ultimate", "prompt": "10 - ? = 0", "answer": 10}, {"type": "defense", "prompt": "1 - 0 = 1", "answer": true}, {"type": "defense", "prompt": "4 - 1 = 4", "answer": false}, {"type": "defense", "prompt": "7 - 2 = 5", "answer": true}, {"type": "defense", "prompt": "10 - 3 = 8", "answer": false}, {"type": "defense", "prompt": "4 - 2 = 2", "answer": true}, {"type": "defense", "prompt": "5 - 5 = 1", "answer": false}, {"type": "defense", "prompt": "8 - 6 = 2", "answer": true}, {"type": "defense", "prompt": "7 - 0 = 8", "answer": false}, {"type": "defense", "prompt": "8 - 3 = 5", "answer": true}, {"type": "defense", "prompt": "9 - 6 = 4", "answer": false}, {"type": "defense", "prompt": "10 - 9 = 1", "answer": true}, {"type": "defense", "prompt": "1 - 0 = 2", "answer": false}, {"type": "defense", "prompt": "4 - 1 = 3", "answer": true}, {"type": "defense", "prompt": "7 - 2 = 6", "answer": false}, {"type": "defense", "prompt": "10 - 3 = 7", "answer": true}, {"type": "defense", "prompt": "4 - 2 = 3", "answer": false}, {"type": "defense", "prompt": "5 - 5 = 0", "answer": true}, {"type": "defense", "prompt": "8 - 6 = 3", "answer": false}];
+function pickType(t){
+ const list=BANK.filter(q=>q.type===t);
+ const q=list[Math.floor(Math.random()*list.length)] || BANK[Math.floor(Math.random()*BANK.length)];
+ if(q.type==="defense"){
+   return {prompt:q.prompt,inputs:[{kind:"choice",key:"x",options:[["yes","⭕ 正確"],["no","❌ 錯誤"]]}],check:v=>(v.x==="yes")===q.answer};
+ }
+ return {prompt:q.prompt,inputs:[{kind:"number",key:"x"}],check:v=>Number(v.x)===q.answer};
+}
 window.KA_PACK={
 id:"g1_math_subtraction10",
-title:"一年級數學 RPG",
-gradeLabel:"1年級",
-subjectLabel:"數學",
-unitLabel:"10以內減法",
-mobName:"減法蝙蝠",
-mobIcon:"🦇",
-bossName:"減法魔王",
-bossIcon:"👹",
-ticketCost:3,
+title:"一年級數學 RPG",gradeLabel:"1年級",subjectLabel:"數學",unitLabel:"10以內減法",
+mobName:"減法蝙蝠",mobIcon:"➕",bossName:"減法魔王",bossIcon:"👹",ticketCost:3,
 generators:{
-normal:({rand})=>{
-  let a,b;
-  do{a=rand(1,10);b=rand(0,a)}while(a-b<0);
-  return{
-    label:"⚔️ 普攻",
-    prompt:`${a} - ${b} = ?`,
-    inputs:[{kind:"number",key:"x"}],
-    check:v=>Number(v.x)===a-b
-  }
-},
-magic:({rand})=>{
-  const variant=rand(1,3);
-  let a,b,c;
-  if(variant===1){
-    a=rand(1,10);b=rand(0,a);c=a-b;
-    return{
-      label:"✨ 魔法",
-      prompt:`${a} - [?] = ${c}`,
-      inputs:[{kind:"number",key:"x"}],
-      check:v=>Number(v.x)===b
-    }
-  }
-  if(variant===2){
-    a=rand(1,10);b=rand(0,a);c=a-b;
-    return{
-      label:"✨ 魔法",
-      prompt:`[?] - ${b} = ${c}`,
-      inputs:[{kind:"number",key:"x"}],
-      check:v=>Number(v.x)===a
-    }
-  }
-  // 運算符號選擇，不用下拉
-  do{a=rand(1,9);b=rand(0,9)}while(a+b>10);
-  const useMinus=Math.random()<0.5;
-  c=useMinus ? a-b : a+b;
-  if(useMinus && c<0){ const t=a;a=b;b=t;c=a-b; }
-  return{
-    label:"✨ 魔法",
-    prompt:`${a} [?] ${b} = ${c}`,
-    inputs:[{kind:"choice",key:"op",options:[["+","＋"],["-","－"]]}],
-    check:v=>v.op==="+" ? a+b===c : a-b===c
-  }
-},
-defense:({rand})=>{
-  let a,b;
-  do{a=rand(1,10);b=rand(0,a)}while(a-b<0);
-  const real=a-b, ok=Math.random()<0.5;
-  let shown=real;
-  if(!ok){ do{shown=rand(0,10)}while(shown===real); }
-  return{
-    label:"🛡️ 防禦",
-    prompt:`${a} - ${b} = ${shown}`,
-    inputs:[{kind:"choice",key:"x",options:[["yes","⭕ 正確"],["no","❌ 錯誤"]]}],
-    check:v=>(v.x==="yes")===ok
-  }
-},
-ultimate:({rand})=>{
-  const target=rand(0,8);
-  return{
-    label:"🔥 必殺",
-    prompt:`找出兩種不同方法得到 ${target}`,
-    inputs:[
-      {kind:"number",key:"a1"},{kind:"number",key:"b1"},
-      {kind:"number",key:"a2"},{kind:"number",key:"b2"}
-    ],
-    check:v=>{
-      const a=+v.a1,b=+v.b1,c=+v.a2,d=+v.b2;
-      const valid=[a,b,c,d].every(n=>Number.isInteger(n)&&n>=0&&n<=10);
-      const same=(a===c&&b===d);
-      return valid&&a>=b&&c>=d&&a-b===target&&c-d===target&&!same;
-    }
-  }
+normal:()=>({label:"⚔️ 普攻",...pickType("normal")}),
+magic:()=>({label:"✨ 魔法",...pickType("magic")}),
+defense:()=>({label:"🛡️ 防禦",...pickType("defense")}),
+ultimate:()=>({label:"🔥 必殺",...pickType("ultimate")})
 }
-}};
+};
