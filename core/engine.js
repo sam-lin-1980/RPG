@@ -198,6 +198,18 @@ function chooseSkill(s){
   if(currentQuestion || state.phase!=='player')return;
   if(s==='magic')state.mp-=40;if(s==='ultimate')state.mp-=100;state.pending=s;renderQ(qByType(s))
 }
+function bossDefense(){
+  if(!state || state.mode!=='boss') return;
+
+  state.phase='boss';
+  state.pending='defense';
+
+  const q=qByType('defense');
+  q.label='🛡️ Boss 回合・防禦';
+
+  renderQ(q);
+}
+
 function submit(){
   if(!currentQuestion || !state) return;
 
