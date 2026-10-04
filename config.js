@@ -2,6 +2,6 @@
 // 只放 Project URL 與 Publishable Key。
 // 不要放 service_role / secret key / database password。
 window.KA_CONFIG = {
-  SUPABASE_URL: "請貼上你的 Supabase Project URL",
-  SUPABASE_KEY: "請貼上你的 Publishable Key"
+  SUPABASE_URL: "https://kfszgpcrrukopdispnwo.supabase.co",
+  SUPABASE_KEY: "sb_publishable_c-rH4NKnZX74LPkrE69rYA_DDYxWBR7"
 };
