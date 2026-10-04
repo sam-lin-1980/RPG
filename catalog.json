@@ -1,0 +1,226 @@
+[
+  {
+    "grade": 1,
+    "title": "1年級數學",
+    "desc": "10 以內加法",
+    "icon": "📐",
+    "path": "content/g1/math/addition10/",
+    "subject": "math"
+  },
+  {
+    "grade": 1,
+    "title": "1年級國語",
+    "desc": "字詞與句子",
+    "icon": "📖",
+    "path": "content/g1/chinese/basic/",
+    "subject": "chinese"
+  },
+  {
+    "grade": 1,
+    "title": "1年級英文",
+    "desc": "字母與基礎單字",
+    "icon": "🔤",
+    "path": "content/g1/english/basic/",
+    "subject": "english"
+  },
+  {
+    "grade": 1,
+    "title": "1年級生活",
+    "desc": "生活常識與安全",
+    "icon": "🌱",
+    "path": "content/g1/life/basic/",
+    "subject": "life"
+  },
+  {
+    "grade": 2,
+    "title": "2年級數學",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "📐",
+    "path": "content/g2/math/basic/",
+    "subject": "math"
+  },
+  {
+    "grade": 2,
+    "title": "2年級國語",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "📖",
+    "path": "content/g2/chinese/basic/",
+    "subject": "chinese"
+  },
+  {
+    "grade": 2,
+    "title": "2年級英文",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "🔤",
+    "path": "content/g2/english/basic/",
+    "subject": "english"
+  },
+  {
+    "grade": 2,
+    "title": "2年級生活",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "🌱",
+    "path": "content/g2/life/basic/",
+    "subject": "life"
+  },
+  {
+    "grade": 3,
+    "title": "3年級數學",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "📐",
+    "path": "content/g3/math/basic/",
+    "subject": "math"
+  },
+  {
+    "grade": 3,
+    "title": "3年級國語",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "📖",
+    "path": "content/g3/chinese/basic/",
+    "subject": "chinese"
+  },
+  {
+    "grade": 3,
+    "title": "3年級英文",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "🔤",
+    "path": "content/g3/english/basic/",
+    "subject": "english"
+  },
+  {
+    "grade": 3,
+    "title": "3年級自然",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "🔬",
+    "path": "content/g3/science/basic/",
+    "subject": "science"
+  },
+  {
+    "grade": 3,
+    "title": "3年級社會",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "🌏",
+    "path": "content/g3/social/basic/",
+    "subject": "social"
+  },
+  {
+    "grade": 4,
+    "title": "4年級數學",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "📐",
+    "path": "content/g4/math/basic/",
+    "subject": "math"
+  },
+  {
+    "grade": 4,
+    "title": "4年級國語",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "📖",
+    "path": "content/g4/chinese/basic/",
+    "subject": "chinese"
+  },
+  {
+    "grade": 4,
+    "title": "4年級英文",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "🔤",
+    "path": "content/g4/english/basic/",
+    "subject": "english"
+  },
+  {
+    "grade": 4,
+    "title": "4年級自然",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "🔬",
+    "path": "content/g4/science/basic/",
+    "subject": "science"
+  },
+  {
+    "grade": 4,
+    "title": "4年級社會",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "🌏",
+    "path": "content/g4/social/basic/",
+    "subject": "social"
+  },
+  {
+    "grade": 5,
+    "title": "5年級數學",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "📐",
+    "path": "content/g5/math/basic/",
+    "subject": "math"
+  },
+  {
+    "grade": 5,
+    "title": "5年級國語",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "📖",
+    "path": "content/g5/chinese/basic/",
+    "subject": "chinese"
+  },
+  {
+    "grade": 5,
+    "title": "5年級英文",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "🔤",
+    "path": "content/g5/english/basic/",
+    "subject": "english"
+  },
+  {
+    "grade": 5,
+    "title": "5年級自然",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "🔬",
+    "path": "content/g5/science/basic/",
+    "subject": "science"
+  },
+  {
+    "grade": 5,
+    "title": "5年級社會",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "🌏",
+    "path": "content/g5/social/basic/",
+    "subject": "social"
+  },
+  {
+    "grade": 6,
+    "title": "6年級數學",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "📐",
+    "path": "content/g6/math/basic/",
+    "subject": "math"
+  },
+  {
+    "grade": 6,
+    "title": "6年級國語",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "📖",
+    "path": "content/g6/chinese/basic/",
+    "subject": "chinese"
+  },
+  {
+    "grade": 6,
+    "title": "6年級英文",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "🔤",
+    "path": "content/g6/english/basic/",
+    "subject": "english"
+  },
+  {
+    "grade": 6,
+    "title": "6年級自然",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "🔬",
+    "path": "content/g6/science/basic/",
+    "subject": "science"
+  },
+  {
+    "grade": 6,
+    "title": "6年級社會",
+    "desc": "預留入口｜可直接替換此科目資料夾",
+    "icon": "🌏",
+    "path": "content/g6/social/basic/",
+    "subject": "social"
+  }
+]

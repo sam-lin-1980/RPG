@@ -1,0 +1,34 @@
+知識學院 RPG V3｜開始使用
+
+1. 打開根目錄 config.js
+   貼上 Supabase Project URL 與 Publishable Key。
+
+2. 到 Supabase SQL Editor
+   執行：
+   supabase/schema-v3.sql
+
+3. 到 Supabase Authentication 設定
+   請把 Confirm email 關閉。
+   原因：本遊戲採「玩家 ID + 密碼」，不使用真實 Email，
+   也不提供密碼找回功能。
+
+4. 把整個 knowledge-academy-full-framework-v3 資料夾內容上傳 GitHub Pages。
+
+5. 首頁會出現：
+   - 登入
+   - 建立帳號
+   - 等級排行榜
+   - 成就排行榜
+   - 1～6年級入口
+
+6. 遊戲完成後會同步：
+   - EXP
+   - 金幣
+   - 年級+科目 Boss 入場券
+   - 單元熟練度
+   - 每次遊戲成績
+
+注意：
+目前「年級升級條件 80 分」的跨科檢查尚未正式啟用。
+這一版先完成帳號、登入、資料同步與排行榜。
+下一版再把各科 80 分、核心單元 70 分、Boss 通關整合成升級判定。

@@ -1,0 +1,49 @@
+Supabase 設定方式
+
+1. 打開網站根目錄的 config.js
+2. 填入：
+   SUPABASE_URL
+   SUPABASE_KEY（Publishable Key）
+
+範例：
+
+window.KA_CONFIG = {
+  SUPABASE_URL: "https://你的專案.supabase.co",
+  SUPABASE_KEY: "sb_publishable_..."
+};
+
+3. 不要放：
+   service_role
+   secret key
+   database password
+
+4. core/database.js 是全站共用資料庫模組。
+   以後年級或科目資料夾不用各自放 Supabase URL/Key。
+
+5. supabase/schema.sql 是之後正式 RPG 資料庫建議結構。
+   包含：
+   player_profiles
+   game_results
+   boss_tickets
+   player_achievements
+
+目前狀態
+========
+這個 V2 已經完成：
+- config.js 共用設定
+- Supabase SDK 載入
+- database.js 共用資料庫 API
+- 首頁資料庫設定檢查
+- 每個遊戲頁都會載入同一份 config.js/database.js
+
+但目前戰鬥進度仍沿用 localStorage。
+這是刻意的：先避免在登入畫面與正式角色系統尚未完成前，
+把未登入資料直接寫進正式資料庫。
+
+下一階段再做：
+登入 / 註冊
+玩家角色資料
+戰鬥結果同步
+票券同步
+排行榜
+成就

@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>知識學院 RPG</title>
+<link rel="stylesheet" href="core/styles.css">
+<style>
+.auth-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.auth-box{padding:18px}
+.auth-box input{width:100%;padding:12px;margin-top:8px;border-radius:10px;border:1px solid #475569}
+.status{padding:10px;border-radius:10px;background:#111827;margin-top:10px}
+.hidden{display:none!important}
+.header-user{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.rank-tabs{display:flex;gap:8px;margin-bottom:10px}
+.rank{width:100%;border-collapse:collapse}.rank td,.rank th{padding:9px;border-bottom:1px solid #334155;text-align:left}
+.grade{margin-top:22px}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.game{padding:16px}.icon{font-size:42px}.game a{display:inline-block;margin-top:10px;text-decoration:none}
+.avatar-mini{font-size:26px}
+@media(max-width:760px){.auth-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">🏫 知識學院 RPG</div>
+  <p class="muted">登入後開始累積角色 EXP、Boss 入場券與排行榜資料。</p>
+
+  <div class="card pad" id="dbCard"><b>🗄️ Supabase</b><div id="dbStatus" class="muted" style="margin-top:6px">檢查中…</div></div>
+
+  <section id="authArea" class="auth-grid" style="margin-top:14px">
+    <div class="card auth-box">
+      <h2>🔐 登入</h2>
+      <input id="loginId" placeholder="玩家 ID">
+      <input id="loginPw" type="password" placeholder="密碼">
+      <button class="btn primary" id="loginBtn" style="margin-top:10px">登入</button>
+      <div class="status muted" id="loginMsg">不提供密碼找回，請記住玩家 ID 與密碼。</div>
+    </div>
+    <div class="card auth-box">
+      <h2>🆕 建立帳號</h2>
+      <input id="regId" placeholder="玩家 ID（英文/數字）">
+      <input id="regNick" placeholder="遊戲暱稱">
+      <input id="regPw" type="password" placeholder="密碼（至少6字）">
+      <input id="regPw2" type="password" placeholder="再次輸入密碼">
+      <button class="btn magic" id="regBtn" style="margin-top:10px">建立角色</button>
+      <div class="status muted" id="regMsg">帳號建立後從一年級 0% 開始。</div>
+    </div>
+  </section>
+
+  <section id="gameArea" class="hidden">
+    <div class="card pad" style="margin-top:14px">
+      <div class="header-user">
+        <div>
+          <div style="font-size:22px;font-weight:900">🧙 <span id="nickname">玩家</span></div>
+          <div class="muted">🎓 <span id="gradeText">一年級 0%</span>　⭐ EXP <span id="exp">0</span>　💰 <span id="coins">0</span></div>
+        </div>
+        <button class="btn secondary" id="logoutBtn">登出</button>
+      </div>
+    </div>
+
+    <div class="card pad" style="margin-top:14px">
+      <div class="rank-tabs">
+        <button class="btn primary" id="rankLevelBtn">🎓 等級榜</button>
+        <button class="btn secondary" id="rankAchBtn">🏅 成就榜</button>
+      </div>
+      <div id="rankBox" class="muted">讀取排行榜中…</div>
+    </div>
+
+    <div id="grades"></div>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js?v=3"></script>
+<script src="core/database.js?v=3"></script>
+<script>
+const $=id=>document.getElementById(id);
+const gradeName=n=> n>=7?'國中生':`${n}年級`;
+function showMsg(id,msg,bad=false){$(id).textContent=msg;$(id).style.color=bad?'#fda4af':'#a7f3d0'}
+async function boot(){
+  if(!KA_DB.configured){
+    $('dbStatus').innerHTML='❌ 尚未設定。請修改根目錄 <code>config.js</code>。';
+    return;
+  }
+  $('dbStatus').textContent='✅ Supabase 已設定。';
+  const s=await KA_DB.getSession();
+  if(s) await enterGame(); else showAuth();
+}
+function showAuth(){$('authArea').classList.remove('hidden');$('gameArea').classList.add('hidden')}
+async function enterGame(){
+  $('authArea').classList.add('hidden');$('gameArea').classList.remove('hidden');
+  const p=await KA_DB.getMyProfile();
+  $('nickname').textContent=p.nickname;
+  $('gradeText').textContent=`${gradeName(p.grade_level)} ${p.grade_percent}%`;
+  $('exp').textContent=p.exp;$('coins').textContent=p.coins;
+  await loadCatalog();await loadRank('level');
+}
+async function loadCatalog(){
+  const items=await fetch('catalog.json?v='+Date.now()).then(r=>r.json());
+  const root=$('grades');root.innerHTML='';
+  for(let g=1;g<=6;g++){
+    const sec=document.createElement('section');sec.className='grade';
+    sec.innerHTML=`<h2>📚 ${g} 年級</h2><div class="cards"></div>`;
+    const cards=sec.querySelector('.cards');
+    items.filter(x=>x.grade===g).forEach(x=>{
+      const d=document.createElement('div');d.className='card game';
+      d.innerHTML=`<div class="icon">${x.icon}</div><h3>${x.title}</h3><div class="muted">${x.desc}</div><a class="btn primary" href="${x.path}">進入課程</a>`;
+      cards.appendChild(d);
+    });
+    root.appendChild(sec);
+  }
+}
+async function loadRank(type){
+  $('rankBox').textContent='讀取中…';
+  try{
+    const rows=type==='ach'?await KA_DB.getAchievementLeaderboard(10):await KA_DB.getLeaderboard(10);
+    let h='<table class="rank"><tr><th>#</th><th>玩家</th><th>等級</th><th>'+ (type==='ach'?'成就點':'EXP') +'</th></tr>';
+    rows.forEach((r,i)=>{
+      h+=`<tr><td>${i+1}</td><td><span class="avatar-mini">🧙</span> ${r.nickname}</td><td>${gradeName(r.grade_level)} ${r.grade_percent}%</td><td>${type==='ach'?r.achievement_points:r.exp}</td></tr>`;
+    });
+    h+='</table>';$('rankBox').innerHTML=h;
+  }catch(e){$('rankBox').textContent='排行榜讀取失敗：'+e.message}
+}
+$('loginBtn').onclick=async()=>{
+  try{showMsg('loginMsg','登入中…');await KA_DB.signIn($('loginId').value,$('loginPw').value);await enterGame()}
+  catch(e){showMsg('loginMsg','登入失敗：'+e.message,true)}
+};
+$('regBtn').onclick=async()=>{
+  try{
+    if($('regPw').value!==$('regPw2').value) throw new Error('兩次密碼不同。');
+    showMsg('regMsg','建立帳號中…');
+    const d=await KA_DB.signUp($('regId').value,$('regPw').value,$('regNick').value);
+    if(d.session){showMsg('regMsg','建立完成！');await enterGame()}
+    else showMsg('regMsg','帳號已建立，但 Supabase 目前要求 Email 驗證。請到 Auth 設定關閉 Confirm email。',true);
+  }catch(e){showMsg('regMsg','建立失敗：'+e.message,true)}
+};
+$('logoutBtn').onclick=async()=>{await KA_DB.signOut();location.reload()};
+$('rankLevelBtn').onclick=()=>loadRank('level');
+$('rankAchBtn').onclick=()=>loadRank('ach');
+boot();
+</script>
+</body></html>
